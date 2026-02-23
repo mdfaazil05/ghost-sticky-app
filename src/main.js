@@ -1,10 +1,12 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow,Tray, Menu } = require('electron');
 const path = require('node:path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
+let tray = null;
 
 const getIconPath = () => {
   switch (process.platform) {
@@ -24,6 +26,7 @@ const createWindow = () => {
     height: 350,
     frame: false,          // Essential for "Sticky Note" look
     transparent: true,     // Makes it feel native
+    skipTaskbar: true,      // Don't show in taskbar/dock
     icon: getIconPath(),   // Set the appropriate icon for each platform
     alwaysOnTop: true,     // Sticky notes stay on top
     webPreferences: {
@@ -42,6 +45,44 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
+
+tray = new Tray(getIconPath());
+
+  // 2. Create the right-click menu for the tray
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Show Ghost Note', 
+      click: () => {
+        // Find the window and show it
+        const win = BrowserWindow.getAllWindows()[0];
+        if (win) {
+          win.show();
+          win.focus();
+        } else {
+          createWindow(); // Recreate it if they closed it completely
+        }
+      } 
+    },
+    { type: 'separator' }, // A visual dividing line
+    { 
+      label: 'Quit', 
+      click: () => {
+        app.quit(); // Fully closes the application
+      } 
+    }
+  ]);
+
+  // 3. Attach the menu and a hover tooltip to the tray
+  tray.setToolTip('Ghost Note');
+  tray.setContextMenu(contextMenu);
+
+  // 4. (Windows only) Allow them to just left-click the icon to toggle the note
+  tray.on('click', () => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (win) {
+      win.isVisible() ? win.hide() : win.show();
+    }
+  });
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

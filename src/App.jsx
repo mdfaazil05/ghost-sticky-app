@@ -100,11 +100,11 @@ const App = () => {
       background: 'transparent', // Keeps the track invisible
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0, 0, 0, 0.2)', // A subtle, semi-transparent grey
+      backgroundColor: getContrastColor(bgColor, 0.2), // A subtle, semi-transparent grey
       borderRadius: '10px', // Rounds the edges of the scrollbar thumb
     },
     '&::-webkit-scrollbar-thumb:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.4)', // Darkens slightly when you hover over it
+      backgroundColor: getContrastColor(bgColor, 0.4), // Darkens slightly when you hover over it
     }
 
        }}>
