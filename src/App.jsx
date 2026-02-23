@@ -92,7 +92,22 @@ const App = () => {
       </Box>
 
       {/* Note Content */}
-      <Box sx={{ flex: 1, p: 2,overflowY: 'auto', WebkitAppRegion: 'no-drag',cursor:'default' }}>
+      <Box sx={{ flex: 1, p: 2,overflowY: 'auto', WebkitAppRegion: 'no-drag',cursor:'default',
+        '&::-webkit-scrollbar': {
+      width: '4px', // Makes the scrollbar very thin
+    },
+    '&::-webkit-scrollbar-track': {
+      background: 'transparent', // Keeps the track invisible
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.2)', // A subtle, semi-transparent grey
+      borderRadius: '10px', // Rounds the edges of the scrollbar thumb
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.4)', // Darkens slightly when you hover over it
+    }
+
+       }}>
        {isSettingsOpen?
       ( <Box sx={{width:"98%",color: getContrastColor(bgColor)}}>
             <Box>
