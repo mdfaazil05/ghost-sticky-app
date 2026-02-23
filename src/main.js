@@ -6,6 +6,17 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+const getIconPath = () => {
+  switch (process.platform) {
+    case 'win32':
+      return path.resolve(__dirname, '../../assets/icon.ico'); // Windows
+    case 'darwin':
+      return path.resolve(__dirname, '../../assets/icon.icns'); // macOS
+    default:
+      return path.resolve(__dirname, '../../assets/icon.png'); // Linux
+  }
+};
+
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -13,6 +24,7 @@ const createWindow = () => {
     height: 350,
     frame: false,          // Essential for "Sticky Note" look
     transparent: true,     // Makes it feel native
+    icon: getIconPath(),   // Set the appropriate icon for each platform
     alwaysOnTop: true,     // Sticky notes stay on top
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,

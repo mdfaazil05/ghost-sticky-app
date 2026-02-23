@@ -1,37 +1,3 @@
-// import React, { useState } from 'react';
-
-// const App = () => {
-//   const [text, setText] = useState("");
-
-//   return (
-//     <div style={{ 
-//       background: '#fff9c4', 
-//       height: '90vh', 
-//       opacity: 0.3,
-//       padding: '20px', 
-//       boxSizing: 'border-box',
-//       borderRadius: '10px',
-//       boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-//       display: 'flex',
-//       flexDirection: 'column'
-//     }}>
-//       {/* This header allows you to move the window since frame is false */}
-//       <div style={{ WebkitAppRegion: 'drag', height: '30px', cursor: 'grab' }}>
-//         <strong>Sticky Note (Ghost Mode)</strong>
-//       </div>
-
-//       <textarea 
-//         style={{ flex: 1, border: 'none', background: 'transparent', outline: 'none', resize: 'none' }}
-//         placeholder="Type something private..."
-//         value={text}
-//         onChange={(e) => setText(e.target.value)}
-//       />
-//     </div>
-//   );
-// };
-
-// export default App;
-
 import React, { useEffect, useState } from 'react';
 import { Paper, Box, IconButton, InputBase, Typography, Tooltip, Slider } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -81,12 +47,12 @@ const App = () => {
       background: bgColor, 
       height: '90vh', 
       opacity:opacity,
-      padding: '20px', 
       boxSizing: 'border-box',
       borderRadius: '10px',
       boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      cursor: 'default',
     }}> 
       {/* Draggable Header */}
       <Box sx={{ 
@@ -94,6 +60,7 @@ const App = () => {
         alignItems: 'center', 
         justifyContent: 'space-between',
         p: 1, 
+        borderRadius: '10px 10px 0 0',
         backgroundColor: '#f4eb91',
         WebkitAppRegion: 'drag', // Make sure this is draggable
         cursor: 'grab'
@@ -108,24 +75,24 @@ const App = () => {
           disableInteractive // This helps performance in Electron
           enterNextDelay={100}
           >
-            <Typography variant="caption" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>(Why invisible?)</Typography>
+            <Typography variant="caption" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>(Why not invisible?)</Typography>
           </Tooltip>
         </Box>
         
         {/* Buttons MUST be 'no-drag' to be clickable */}
         <Box sx={{ WebkitAppRegion: 'no-drag' }}>
-          <IconButton size="small" sx={{ WebkitAppRegion: 'no-drag' }} onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
+          <IconButton size="small" sx={{ WebkitAppRegion: 'no-drag',cursor: 'default' }} onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
           {isSettingsOpen ? <ArrowBack fontSize="small" /> : <Settings fontSize="small" />}
         </IconButton>
 
-          <IconButton size="small" onClick={() => window.close()}>
+          <IconButton size="small" sx={{cursor: 'default'}} onClick={() => window.close()}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
         </Box>
       </Box>
 
       {/* Note Content */}
-      <Box sx={{ flex: 1, p: 2,overflowY: 'auto', WebkitAppRegion: 'no-drag',border:"1px solid black" }}>
+      <Box sx={{ flex: 1, p: 2,overflowY: 'auto', WebkitAppRegion: 'no-drag',cursor:'default' }}>
        {isSettingsOpen?
       ( <Box sx={{width:"98%",color: getContrastColor(bgColor)}}>
             <Box>
@@ -155,7 +122,9 @@ const App = () => {
           placeholder="Type private notes here..."
           value={note}
           onChange={(e) => {setNote(e.target.value); localStorage.setItem('stickyNoteContent', e.target.value);}}
-          sx={{ fontSize: '16px', alignItems: 'flex-start', color: getContrastColor(bgColor) }}
+          sx={{ fontSize: '16px', alignItems: 'flex-start','& .MuiInputBase-input': {
+      cursor: 'default',
+    }, color: getContrastColor(bgColor) }}
         />)}
       </Box>
     </div>
