@@ -36,6 +36,14 @@ const createWindow = () => {
   // THE MAGIC LINE: Prevents capture in Teams/Zoom
   mainWindow.setContentProtection(true);
 
+  // 1. FORCE THE HIGHEST LAYER
+  // 'screen-saver' is the highest z-index level in Windows and macOS
+  mainWindow.setAlwaysOnTop(true, 'screen-saver');
+
+  // 2. SURVIVE DESKTOP SWIPES
+  // This prevents the note from disappearing if you use multiple virtual desktops
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 };
 
