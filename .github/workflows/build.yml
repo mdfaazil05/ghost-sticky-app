@@ -1,0 +1,40 @@
+name: Build Ghost Note
+
+# 1. This tells GitHub to run this script whenever you push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-windows:
+    # 2. We use a Windows runner so Electron Forge natively builds a .exe
+    runs-on: windows-latest
+
+    steps:
+      # 3. Grabs your code from the repository
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # 4. Installs Node.js on the virtual machine
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Use a recent, stable version of Node
+          cache: 'npm'     # Speeds up future builds by caching node_modules
+
+      # 5. Installs your project dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 6. Runs the Electron Forge build command
+      - name: Build the .exe
+        run: npm run make
+
+      # 7. Uploads the generated .exe file so you can download it
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GhostNote-Windows-App
+          # This grabs any .exe file generated in the 'out/make' directory
+          path: out/make/**/*.exe
