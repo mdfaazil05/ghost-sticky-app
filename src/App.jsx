@@ -33,7 +33,7 @@ const App = () => {
     const savedNote = localStorage.getItem('stickyNoteContent');
     const savedBgColor = localStorage.getItem('stickyNoteBgColor');
     const savedOpacity = localStorage.getItem('stickyNoteOpacity');
-
+console.log("check",savedNote);
     if (savedBgColor) setBgColor(savedBgColor);
     if (savedOpacity) setOpacity(parseFloat(savedOpacity));
     if (savedNote) {
