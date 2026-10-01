@@ -1,40 +1,68 @@
 name: Build Ghost Note
 
-# 1. This tells GitHub to run this script whenever you push to the 'main' branch
 on:
   push:
     branches:
       - main
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
 
 jobs:
   build-windows:
-    # 2. We use a Windows runner so Electron Forge natively builds a .exe
+    name: Build Windows (.exe)
     runs-on: windows-latest
 
     steps:
-      # 3. Grabs your code from the repository
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      # 4. Installs Node.js on the virtual machine
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Use a recent, stable version of Node
-          cache: 'npm'     # Speeds up future builds by caching node_modules
+          node-version: 20
+          cache: 'npm'
 
-      # 5. Installs your project dependencies
       - name: Install dependencies
         run: npm install
 
-      # 6. Runs the Electron Forge build command
-      - name: Build the .exe
+      - name: Build Windows .exe
         run: npm run make
 
-      # 7. Uploads the generated .exe file so you can download it
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
         with:
           name: GhostNote-Windows-App
-          # This grabs any .exe file generated in the 'out/make' directory
           path: out/make/**/*.exe
+
+  build-linux:
+    name: Build Linux (.deb, .rpm, .zip)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Linux packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm fakeroot dpkg
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Linux packages
+        run: npm run make
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GhostNote-Linux-App
+          path: |
+            out/make/**/*.deb
+            out/make/**/*.rpm
+            out/make/**/*.zip
